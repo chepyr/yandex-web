@@ -13,10 +13,10 @@ def main():
 @app.route('/', methods=['POST', 'GET'])
 def start():
     if request.method == 'POST':
-        print('oks')
-        return make_response('okay')
+        return make_response(f'okay, {request.form.get("search")}')
 
-    return render_template('base.html')
+    elif request.method == 'GET':
+        return render_template('base.html')
 
 
 @app.route('/search=<params>')
