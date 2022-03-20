@@ -27,11 +27,18 @@
     <!-- Navbar content -->
 
     <form action="" class="form-inline" method="post" enctype="multipart/form-data">
-        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search" aria-label="Search">
+        <input class="form-control mr-sm-2" type="text" name="search" placeholder="Search"
+               aria-label="Search">
         <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
     </form>
 
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="/">Navbar</a>
 </nav>
+
+<div class="container text-dark"
+     style="padding-top: 10px; padding-bottom: 30px;">
+    {% block content %}{% endblock %}
+</div>
+
 </body>
 </html>
