@@ -19,4 +19,9 @@ def start():
     return render_template('base.html')
 
 
+@app.route('/search=<params>')
+def search(params):
+    return make_response(params)
+
+
 main()
