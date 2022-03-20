@@ -1,4 +1,4 @@
-from flask import Flask, make_response
+from flask import Flask, make_response, render_template, request
 
 from config import *
 
@@ -10,9 +10,13 @@ def main():
     app.run(port=8080, host='127.0.0.1')
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def start():
-    return make_response(f'hello')
+    if request.method == 'POST':
+        print('oks')
+        return make_response('okay')
+
+    return render_template('base.html')
 
 
 main()
