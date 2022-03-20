@@ -15,4 +15,9 @@ def start():
     return make_response(f'hello')
 
 
+@app.route('/search=<params>')
+def search(params):
+    return make_response(params)
+
+
 main()
