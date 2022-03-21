@@ -6,7 +6,12 @@
 
 {% block content %}
 
-<h3>Контент будет тут</h3>
-<h3>{{ data }}</h3>
+<h4>Результаты поиска "{{ search }}"</h4>
+
+
+{% for elem in data %}
+<hr>
+<p class="text-justify">{{ elem }}</p>
+{% endfor %}
 
 {% endblock %}
