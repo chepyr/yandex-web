@@ -12,7 +12,7 @@ from data import db_session
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = FLASK_KEY
+app.config['SECRET_KEY'] = "yandexlyceum_secret_key"
 
 login_manager = LoginManager()
 login_manager.init_app(app)
