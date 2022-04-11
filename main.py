@@ -127,4 +127,5 @@ def load_user(user_id):
     return db_sess.query(User).get(user_id)
 
 
-main()
+if __name__ == '__main__':
+    main()
