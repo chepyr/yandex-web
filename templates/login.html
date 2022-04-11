@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h4>Авторизация</h4>
+
+    <!-- Форма авторизации -->
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.login.label(class="form-label") }}<br>
+            {{ form.login(class="form-control") }}<br>
+            {% for error in form.login.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        </p>
+        <p>
+            {{ form.password.label(class="form-label") }}<br>
+            {{ form.password(class="form-control", type="password") }}<br>
+            {% for error in form.password.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endfor %}
+        </p>
+
+        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+        <p>{{ form.submit(type="submit", class="form-btn") }}</p>
+        <div>{{ message }}</div>
+    </form>
+
+
+    <h4>У вас ещё нет аккаунта?</h4>
+    <a href="/register">Зарегистрироваться</a>
+</div>
+
+{% endblock %}
+
