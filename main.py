@@ -8,7 +8,8 @@ from flask_login import login_user, logout_user, login_required, LoginManager, \
 from data.user import User
 from data import db_session
 
-from config import *
+# from config import *
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = FLASK_KEY
