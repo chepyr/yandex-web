@@ -37,17 +37,22 @@ def start():
 def profile_default():
     """ """
     # Если пользователь авторизован, то перенаправляем его на страницу по id
-    if current_user:
+    if current_user.is_authenticated:
         return redirect(f'/profile/{current_user.login}')
     # Иначе - перенаправляем на страницу для регистрации/авторизации
     else:
         return redirect('/login')
 
 
-@app.route('/profile/<login>')
+@app.route('/profile/<login>', methods=['GET', 'POST'])
 @login_required
 def profile(login):
-    return make_response(f'User {login}')
+    if current_user.is_authenticated:
+        user = current_user
+    else:
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.login == login).first()
+    return render_template('profile.html', user=user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -63,6 +68,13 @@ def login():
         return render_template('login.html', form=form,
                                message='Неправильный логин или пароль')
     return render_template('login.html', form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect('/')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -99,12 +111,12 @@ def register():
 
 @app.route('/play')
 def play():
-    return make_response('Play')
+    return render_template('play.html')
 
 
 @app.route('/top')
 def top():
-    return make_response(f'Top of users')
+    return render_template('top.html')
 
 
 @login_manager.user_loader
