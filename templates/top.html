@@ -8,4 +8,8 @@
 
 <h3>Топ игроков</h3>
 
+{% for user in users %}
+<p>Логин: {{ user.login }}, имя: {{ user.name }}</p>
+{% endfor %}
+
 {% endblock %}

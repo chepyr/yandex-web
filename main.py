@@ -118,7 +118,11 @@ def play():
 
 @app.route('/top')
 def top():
-    return render_template('top.html')
+    """Страница с отображением топа пользователей"""
+    session = db_session.create_session()
+    users = session.query(User).all()
+    data = [user for user in users]
+    return render_template('top.html', users=data)
 
 
 @login_manager.user_loader
