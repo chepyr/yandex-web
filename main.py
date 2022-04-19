@@ -1,9 +1,11 @@
 import flask
 from flask import Flask, make_response, render_template, request, redirect
-from forms.register import RegisterForm
-from forms.login import LoginForm
 from flask_login import login_user, logout_user, login_required, LoginManager, \
     current_user
+
+from forms.register import RegisterForm
+from forms.login import LoginForm
+from forms.check_word import CheckWordLine
 
 from data.user import User
 from data import db_session
@@ -84,7 +86,6 @@ def register():
     form = RegisterForm()
     # Если пользователь нажал на кнопку "Зарегестрироваться"
     if form.validate_on_submit():
-
         # Проверка на совпадение паролей
         if form.password.data != form.password_again.data:
             return render_template('register.html', form=form,
@@ -111,11 +112,44 @@ def register():
     return render_template('register.html', form=form)
 
 
-@app.route('/play')
+PLAY_TABLE_COLORS = {
+    'right_place': '#345e38',
+    'wrong_place': '#786b2e',
+    'default': '#59574f'
+}
+
+
+@app.route('/play', methods=['GET', 'POST'])
+@login_required
 def play():
-    return render_template('play.html')
+    """Сама игра - угадывание слов"""
+    form = CheckWordLine()
+
+    # Получение текущего угадываемого слова из куки
+    # Если в куки такого слова нет, то получаем новое
+    word = 'чепыр'
+    # data = [[''] * 5] * 6
+
+    data = [[('*', '*'), ('a', PLAY_TABLE_COLORS['right_place']), ('*', '*'),
+             ('*', '*'), ('*', '*')],
+
+            [('c', PLAY_TABLE_COLORS['wrong_place']),
+             ('a', PLAY_TABLE_COLORS['right_place']),
+             ('*', '*'), ('*', '*'), ('*', '*')]]
+
+    # Если пользователь ввёл слово
+    if form.validate_on_submit():
+        # Проверка на то, что в введённом слове ровно 5 букв
+        entered_word = form.word_line.data
+        if len(entered_word) != 5:
+            return render_template('play.html', form=form, data=data,
+                                   message='В слове должно быть 5 букв')
+        print(entered_word)
+
+    return render_template('play.html', data=data, form=form)
 
 
+@login_required
 @app.route('/top')
 def top():
     """Страница с отображением топа пользователей"""

@@ -2,3 +2,9 @@
     max-width: 30vw;
     margin-right: 5px;
 }
+
+.play-table {
+    border-radius: 20px;
+    font-size: 20px;
+    text-align: center;
+}

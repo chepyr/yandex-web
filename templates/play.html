@@ -8,4 +8,38 @@
 
 <h3>Играть</h3>
 
+<table class="table table-bordered table-dark play-table">
+    <tbody>
+
+    {% for row in data %}
+    <tr>
+        {% for letter in row %}
+        <td style="background: {{ letter[1] }}">{{ letter[0] }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+
+    <tr>
+        <td colspan="5">
+
+            <form action="" method="post" novalidate>
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.word_line(class="form-control") }}
+                    {% for error in form.word_line.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+                {% endfor %}
+                </p>
+                <p>{{ form.submit(type="submit", class="form-btn") }}</p>
+                <div>{{ message }}</div>
+            </form>
+
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+
 {% endblock %}
