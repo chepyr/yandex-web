@@ -132,7 +132,7 @@ def register():
     return render_template('register.html', form=form)
 
 
-def get_word_and_tries():
+def set_word_and_tries():
     """Получение текущего угадываемого слова и номера попытки для пользователя
     (Если такого слова нет - то получение нового из 'Банка слов')"""
     word = current_user.current_word
@@ -150,8 +150,6 @@ def get_word_and_tries():
         user.current_try = 0
         db_sess.commit()
         db_sess.close()
-
-    return word, try_number
 
 
 def get_entered_tries():
@@ -197,17 +195,18 @@ def update_entered_tries(entered_word):
     return get_entered_tries()
 
 
-def check_word(word):
+def try_number_is_over():
     db_sess = db_session.create_session()
     user = db_sess.query(User).get(current_user.id)
     db_sess.close()
+    return user.current_try == 6
 
-    if word == user.current_word:
-        return False
-    if user.current_try == 5:
-        print('obfhbdjbfhjbdhjfbhjdhjbf')
-        return False
-    return True
+
+def right_word(entered_word):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).get(current_user.id)
+    db_sess.close()
+    return user.current_word == entered_word
 
 
 @app.route('/play', methods=['GET', 'POST'])
@@ -215,34 +214,56 @@ def check_word(word):
 def play():
     """Страница с игрой - угадывание слов"""
     form = CheckWordLine()
-
     # Получение текущего угадываемого слова
-    word, try_number = get_word_and_tries()
-    # print(word, try_number)
-
+    set_word_and_tries()
     data = get_entered_tries()
-
     # Если пользователь ввёл слово
     if request.method == 'POST':
         if form.validate_on_submit():
-            # Проверка на то, что в введённом слове ровно 5 букв
-            entered_word = form.word_line.data.lower()
 
+            entered_word = form.word_line.data.lower()
+            # Проверка на то, что в введённом слове ровно 5 букв
             if len(entered_word) != 5:
                 return render_template('play.html', form=form,
                                        message='В слове должно быть 5 букв')
-
-            #
             data = update_entered_tries(entered_word)
 
-            if check_word(entered_word):
+            # Если пользователь отгадал слово
+            if right_word(entered_word):
+                return player_won(entered_word)
+            # Если пользователь превысил кол-во попыток
+            elif try_number_is_over():
+                return player_lost(current_user.current_word)
 
-                form = CheckWordLine()
-                return render_template('play.html', data=data, form=form)
-            else:
-                print('sdmks')
+            # Если пользователь по-прежнему будет отгадывать слово
+            form = CheckWordLine()
+            return render_template('play.html', data=data, form=form)
 
     return render_template('play.html', data=data, form=form)
+
+
+def player_won(word):
+    """Функция вызывается в случае выигрыша пользователя"""
+    clear_game()
+    return render_template('you_won.html', word=word)
+
+
+def player_lost(word):
+    """Функция вызывается в случае проигрыша (превышения количества попыток)"""
+    clear_game()
+    return render_template('game_over.html', word=word)
+
+
+def clear_game():
+    """Удаляет сведения о текущей игре - количество попыток, загаданное слово
+    и список слов-попыток, вводимых пользователем"""
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).get(current_user.id)
+    user.current_word = None
+    user.current_try = None
+    user.entered_words = None
+    db_sess.commit()
+    db_sess.close()
 
 
 @app.route('/top')
