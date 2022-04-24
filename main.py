@@ -206,6 +206,7 @@ def update_entered_tries(entered_word):
 
 
 def try_number_is_over():
+    """Проверка на то, что попытка является последней (шестой)"""
     db_sess = db_session.create_session()
     user = db_sess.query(User).get(current_user.id)
     db_sess.close()
@@ -213,6 +214,7 @@ def try_number_is_over():
 
 
 def right_word(entered_word):
+    """Проверка на то, что введённое пользователем слово и есть загаданное"""
     db_sess = db_session.create_session()
     user = db_sess.query(User).get(current_user.id)
     db_sess.close()
@@ -242,7 +244,7 @@ def play():
             if right_word(entered_word):
                 return player_won(entered_word)
             # Если пользователь превысил кол-во попыток
-            elif try_number_is_over():
+            if try_number_is_over():
                 return player_lost(current_user.current_word)
 
             # Если пользователь по-прежнему будет отгадывать слово

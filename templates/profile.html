@@ -8,10 +8,16 @@
 
 <h3>Профиль</h3>
 <p>
-    Логин: {{ user.login }}
+    <strong>Логин:</strong> {{ user.login }}
 </p>
 <p>
-    Имя: {{ user.name }}
+    <strong>Имя:</strong> {{ user.name }}
+</p>
+<p>
+    <strong>Очки:</strong> {{ user.points }}
+</p>
+<p>
+    <strong>Угадано слов:</strong> {{ user.guessed_count }}
 </p>
 
 <!-- Button trigger modal -->
@@ -34,7 +40,9 @@
                 Вы уверены, что хотите выйти из аккаунта?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Отмена</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        aria-label="Close">Отмена
+                </button>
                 <a type="button" class="btn btn-primary" href="/logout">Да
                 </a>
             </div>

@@ -6,7 +6,11 @@
 
 {% block content %}
 
-<h4>Вы отгадали слово!</h4>
-<p>Слово: {{ word }}</p>
-
+<div class="text-center">
+    <h4>Вы отгадали слово!</h4>
+    <p>Слово: {{ word }}</p>
+    <a type="button" class="btn btn-light" href="/play">
+        Новая игра
+    </a>
+</div>
 {% endblock %}
