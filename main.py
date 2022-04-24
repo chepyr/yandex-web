@@ -53,8 +53,7 @@ def unauthorized(error):
 def unauthorized(error):
     """Обработчик ошибки 500 - """
     return render_template('error.html',
-                           error_message='''Внутренняя ошибка\nЕсли Вам встрет
-                           илась эта ошибка, можете обратиться https://t.me/or_redecorate''')
+                           error_message='''Внутренняя ошибка''')
 
 
 def main():
@@ -98,7 +97,6 @@ def login():
         user = db_sess.query(User).filter(User.login == form.login.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
-            print('ok')
             return redirect('/')
         return render_template('login.html', form=form,
                                message='Неправильный логин или пароль')
@@ -151,7 +149,7 @@ def set_word_and_tries():
 
     # Если у пользователя нет текущего угадываемого слова,
     # то случайным образом выбираем новое и обнуляем номер попытки
-    if word is None:
+    if word is None or word == '-':
         word = choice(WORD_BANK)
         try_number = 0
 
