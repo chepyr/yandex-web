@@ -27,6 +27,16 @@ PLAY_TABLE_COLORS = {
     'wrong_place': '#786b2e'
 }
 
+# Шкала конвертации номера попытки в очки (points)
+CONVERT_TRIES_TO_POINTS = {
+    1: 10,
+    2: 7,
+    3: 5,
+    4: 3,
+    5: 2,
+    6: 1
+}
+
 # Импорт банка слов для игры
 from data.word_bank import WORD_BANK
 
@@ -244,6 +254,7 @@ def play():
 
 def player_won(word):
     """Функция вызывается в случае выигрыша пользователя"""
+    update_points()
     clear_game()
     return render_template('you_won.html', word=word)
 
@@ -252,6 +263,16 @@ def player_lost(word):
     """Функция вызывается в случае проигрыша (превышения количества попыток)"""
     clear_game()
     return render_template('game_over.html', word=word)
+
+
+def update_points():
+    """Обновляет общий счет у игрока"""
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).get(current_user.id)
+    user.points += CONVERT_TRIES_TO_POINTS[user.current_try]
+    user.guessed_count += 1
+    db_sess.commit()
+    db_sess.close()
 
 
 def clear_game():
