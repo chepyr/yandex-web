@@ -11,6 +11,7 @@ from forms.check_word import CheckWordLine
 
 from data.user import User
 from data import db_session
+from data import pictures
 
 # from config import *
 import os
@@ -258,13 +259,15 @@ def player_won(word):
     """Функция вызывается в случае выигрыша пользователя"""
     update_points()
     clear_game()
-    return render_template('you_won.html', word=word)
+    picture = choice(pictures.HAPPY_PICS)
+    return render_template('you_won.html', word=word, picture_link=picture)
 
 
 def player_lost(word):
     """Функция вызывается в случае проигрыша (превышения количества попыток)"""
     clear_game()
-    return render_template('game_over.html', word=word)
+    picture = choice(pictures.SAD_PICS)
+    return render_template('game_over.html', word=word, picture_link=picture)
 
 
 def update_points():
