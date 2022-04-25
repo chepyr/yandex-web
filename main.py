@@ -295,7 +295,7 @@ def clear_game():
 def top():
     """Страница с отображением топа пользователей"""
     session = db_session.create_session()
-    users = session.query(User).all()
+    users = session.query(User).order_by(-User.points, -User.guessed_count)
     data = [user for user in users]
     return render_template('top.html', users=data)
 
