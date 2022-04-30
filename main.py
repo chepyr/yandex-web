@@ -245,7 +245,10 @@ def play():
         if form.validate_on_submit():
 
             entered_word = form.word_line.data.lower()
+            # Заменяем ё на е (считаем буквы равными)
             entered_word = entered_word.replace('ё', 'е')
+            # Убираем лишние пробелы с обоих концов
+            entered_word = entered_word.strip(' ')
             # Проверка на то, что в введённом слове ровно 5 букв
             if len(entered_word) != 5:
                 return render_template('play.html', form=form, data=data,
