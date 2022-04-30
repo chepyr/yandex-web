@@ -22,6 +22,9 @@ app.config['SECRET_KEY'] = "yandexlyceum_secret_key"
 login_manager = LoginManager()
 login_manager.init_app(app)
 
+# Импорт банка слов для игры
+from data.word_bank import WORD_BANK
+
 # Цвета для игровой таблицы
 PLAY_TABLE_COLORS = {
     'right_place': '#345e38',
@@ -38,8 +41,15 @@ CONVERT_TRIES_TO_POINTS = {
     6: 1
 }
 
-# Импорт банка слов для игры
-from data.word_bank import WORD_BANK
+
+def get_points_word(points):
+    if points % 100 in [i for i in range(10, 20)]:
+        return 'очков'
+    if points % 10 == 1:
+        return 'очко'
+    if points % 10 in [2, 3, 4]:
+        return 'очка'
+    return 'очков'
 
 
 @app.errorhandler(401)
@@ -235,7 +245,7 @@ def play():
             entered_word = form.word_line.data.lower()
             # Проверка на то, что в введённом слове ровно 5 букв
             if len(entered_word) != 5:
-                return render_template('play.html', form=form,
+                return render_template('play.html', form=form, data=data,
                                        message='В слове должно быть 5 букв')
             data = update_entered_tries(entered_word)
 
@@ -255,10 +265,15 @@ def play():
 
 def player_won(word):
     """Функция вызывается в случае выигрыша пользователя"""
-    update_points()
+    try_number, total_words = update_points()
+    added_points = CONVERT_TRIES_TO_POINTS[try_number]
     clear_game()
     picture = choice(pictures.HAPPY_PICS)
-    return render_template('you_won.html', word=word, picture_link=picture)
+    return render_template('you_won.html', word=word, picture_link=picture,
+                           points=added_points,
+                           points_word=get_points_word(added_points),
+                           total_words=total_words,
+                           count_word=get_points_word(total_words))
 
 
 def player_lost(word):
@@ -269,13 +284,21 @@ def player_lost(word):
 
 
 def update_points():
-    """Обновляет общий счет у игрока"""
+    """Обновляет общий счет у игрока
+    Возвращает 2 значения:
+        - количество использованных пользователем попыток
+        - общее количество угаданных пользователем слов"""
     db_sess = db_session.create_session()
     user = db_sess.query(User).get(current_user.id)
     user.points += CONVERT_TRIES_TO_POINTS[user.current_try]
     user.guessed_count += 1
+
+    tries, points = user.current_try, user.points
+
     db_sess.commit()
     db_sess.close()
+
+    return tries, points
 
 
 def clear_game():

@@ -9,11 +9,15 @@
 <div class="text-center">
     <h4>Вы отгадали слово!</h4>
     <p>Слово: {{ word }}</p>
+    <p>Вы получили {{ points }} {{ points_word }}!</p>
+    <p>Счёт: {{ total_words }} {{ count_word }}</p>
 
-    <img src="{{ picture_link }}" alt="Картинка" class="game-over-picture"><br>
+    <img src="{{ picture_link }}" alt="Картинка" class="game-over-picture"></br>
 
-    <a type="button" class="btn btn-light" href="/play">
-        Новая игра
-    </a>
+    <h5>
+        <a type="button" class="btn btn-light" href="/play">
+            Новая игра
+        </a>
+    </h5>
 </div>
 {% endblock %}

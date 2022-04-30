@@ -26,11 +26,7 @@
                 {{ form.hidden_tag() }}
                 <p>
                     {{ form.word_line(class="form-control", value="") }}
-                    {% for error in form.word_line.errors %}
-                <div class="alert alert-danger" role="alert">
-                    {{ error }}
-                </div>
-                {% endfor %}
+
                 </p>
                 <p>{{ form.submit(type="submit", class="form-btn") }}</p>
                 <div>{{ message }}</div>
