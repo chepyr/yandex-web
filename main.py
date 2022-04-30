@@ -101,6 +101,12 @@ def profile(login):
     return render_template('profile.html', user=user, guest_mode=guest_mode)
 
 
+@app.route('/edit_profile')
+@login_required
+def edit_profile():
+    return make_response('edit profile')
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
