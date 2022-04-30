@@ -56,7 +56,7 @@ def get_points_word(points):
 def unauthorized(error):
     """Обработчик ошибки 401 - Неавторизованный пользователь"""
     return render_template('error.html',
-                           error_message='Пожалуйста, зарегистрируйтесь')
+                           error_message='Пожалуйста, войдите в аккаунт')
 
 
 @app.errorhandler(500)
@@ -91,12 +91,14 @@ def profile_default():
 @app.route('/profile/<login>', methods=['GET', 'POST'])
 @login_required
 def profile(login):
-    if current_user.is_authenticated:
+    if current_user.login == login:
         user = current_user
+        guest_mode = False
     else:
         db_sess = db_session.create_session()
         user = db_sess.query(User).filter(User.login == login).first()
-    return render_template('profile.html', user=user)
+        guest_mode = True
+    return render_template('profile.html', user=user, guest_mode=guest_mode)
 
 
 @app.route('/login', methods=['GET', 'POST'])

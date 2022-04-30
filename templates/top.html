@@ -14,7 +14,6 @@
     <tr>
         <th scope="col">#</th>
         <th scope="col">Login</th>
-        <th scope="col">Name</th>
         <th scope="col">Points</th>
         <th scope="col">Words</th>
     </tr>
@@ -25,8 +24,11 @@
     <tr>
 
         <th scope="row">{{ loop.index }}</th>
-        <td>{{ user.login }}</td>
-        <td>{{ user.name }}</td>
+        <td>
+            <a href="/profile/{{ user.login }}" class="text-light">
+                <strong>{{ user.login }}</strong>
+            </a>
+        </td>
         <td>{{ user.points }}</td>
         <td>{{ user.guessed_count }}</td>
 
