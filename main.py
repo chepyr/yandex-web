@@ -243,6 +243,7 @@ def play():
         if form.validate_on_submit():
 
             entered_word = form.word_line.data.lower()
+            entered_word = entered_word.replace('ё', 'е')
             # Проверка на то, что в введённом слове ровно 5 букв
             if len(entered_word) != 5:
                 return render_template('play.html', form=form, data=data,
@@ -265,15 +266,15 @@ def play():
 
 def player_won(word):
     """Функция вызывается в случае выигрыша пользователя"""
-    try_number, total_words = update_points()
+    try_number, total_points= update_points()
     added_points = CONVERT_TRIES_TO_POINTS[try_number]
     clear_game()
     picture = choice(pictures.HAPPY_PICS)
     return render_template('you_won.html', word=word, picture_link=picture,
                            points=added_points,
                            points_word=get_points_word(added_points),
-                           total_words=total_words,
-                           count_word=get_points_word(total_words))
+                           total_points=total_points,
+                           total_points_word=get_points_word(total_points))
 
 
 def player_lost(word):
