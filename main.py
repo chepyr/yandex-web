@@ -125,7 +125,7 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    # Если пользователь нажал на кнопку "Зарегестрироваться"
+    # Если пользователь нажал на кнопку "Зарегистрироваться"
     if form.validate_on_submit():
         # Проверка на совпадение паролей
         if form.password.data != form.password_again.data:
